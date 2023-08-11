@@ -1,15 +1,25 @@
 \usepackage[activate={true,nocompatibility},final,tracking=true,kerning=true,spacing=true,factor=1100,stretch=10,shrink=10]{microtype}   % Better typography
-
+\usepackage{fmtcount}
+\usepackage{multicol}
 \usepackage{lettrine}   % Add drop caps to chapter openings
 \usepackage{graphicx}
 \usepackage{ebgaramond}
-\usepackage{librecaslon}
+\usepackage{librebaskerville}
+%\usepackage{librecaslon}
+%\usepackage{gentium}
 \usepackage{helvet}
+
+% Reset chapter counter within each part
+\usepackage{chngcntr}
+\counterwithin*{chapter}{part}
 
 \newcommand{\hsp}{\kern 1pt}    % for nested quotation marks
 
+% One bigger size
+\newcommand{\HUGE}{\fontsize{50}{70}\selectfont}
+
 % Paragraph formatting
-\renewcommand{\baselinestretch}{1.3}      % Allow paragraphs to breathe by spreading the lines further
+\renewcommand{\baselinestretch}{1.125}      % Allow paragraphs to breathe by spreading the lines further
 \setlength{\parskip}{0pt}                   % Fixed space between paragraphs (i.e. disable variable parskip)
 \setlength{\parindent}{1em}
 
@@ -22,12 +32,12 @@
 
 % Page size
 \usepackage[
-    paperheight=9in,
-    paperwidth=6in,
-    top=0.75in,
+    paperheight=8in,
+    paperwidth=5.25in,
+    top=0.6in,
     bottom=0.75in,
-    outer=0.75in,
-    inner=0.875in,
+    outer=0.6in,
+    inner=0.75in,
     bindingoffset=0.125in, % Adjust this value as needed
     twoside % Enable two-sided layout
 ]{geometry}
@@ -40,29 +50,53 @@
 \renewcommand{\cftchapfont}{\large\itshape}
 \renewcommand{\cftchappagefont}{\normalfont}
 \renewcommand{\numberline}[1]{}
-\renewcommand{\cftpartfont}{\scshape}
+\renewcommand{\cftpartfont}{\sffamily\scshape}
+\renewcommand{\cftpartpagefont}{\normalfont}
 % Reduce spacing between chapters
 \setlength{\cftbeforechapskip}{0.5em}
+%unnamed chapter formatting
+
+%function to controll what gets written in TOC
+\newcommand{\nocontentsline}[3]{}
+\newcommand{\tocless}[2]{\bgroup\let\addcontentsline=\nocontentsline#1{#2}\egroup}
+
+% Branching chapter function -> empty or not
+\newcommand{\clapter}[1]{%
+  \if\relax\detokenize{#1}\relax
+    \tocless\chapter{}
+    \addcontentsline{toc}{chapter}{\selectfont Chapter\ \thechapter} % Add chapter number to table of contents
+  \else
+    \tocless\chapter{#1}
+    \addcontentsline{toc}{chapter}{\selectfont #1}
+  \fi
+}
 
 % Chapter headings
 \usepackage{titlesec}
 \renewcommand\thechapter{\Roman{chapter}}
 \titleformat{\chapter}[display]
   {\normalfont\huge\centering}
-  {\sffamily\scshape\fontsize{14}{18}\selectfont chapter\ \thechapter}{0pt}{\Huge}
+  {\sffamily\scshape\fontsize{14}{18}\selectfont chapter\ \MakeLowercase\thechapter}{0pt}{\huge}
+
 
 % Part headings
 \titleformat{\part}[display]
   {\centering\normalfont}
   {\sffamily\scshape\Large\ordinalstring{part} part}
-  {0pt}
-  {\scshape\Huge}
+  {6pt}
+  {\scshape\fontsize{23}{23}\selectfont}
+
+%quote
+\AtBeginEnvironment{quote}{\itshape} 
 
 % headers/footers
 \usepackage{fancyhdr}
-\setlength{\headheight}{15pt}
+%\setlength{\headheight}{10pt}
 \pagestyle{fancy}
 \fancyhf{}
 \renewcommand{\headrulewidth}{0pt}
-
+\fancyhf[CFE,CFO]{\thepage}         % Set page numbers in the footer
+%\fancyhead[LE,RO]{\thepage}        % Set page numbers in the left/right sides of the header
+%\fancyhead[CE]{\itshape\authorname} % Author name in middle of left-side page header
+%\fancyhead[CO]{\itshape\booktitle}  % Book title in middle of right-side page header
 
